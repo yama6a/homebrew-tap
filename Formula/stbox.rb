@@ -4,6 +4,14 @@ class Stbox < Formula
   homepage "https://github.com/yama6a/subtitle-toolbox-go"
   license "MIT"
 
+  bottle do
+    root_url "https://github.com/yama6a/homebrew-tap/releases/download/stbox-4.21.7"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma: "868438f369ab8f5103c11bd7c8da854e2a55ba174156b4ebee86b66d9abdba98"
+    sha256 cellar: :any_skip_relocation, ventura:      "accc0ed01af3d42d2f66024ff083de774bca1fc8133de9d12f51e60959848b5e"
+    sha256 cellar: :any_skip_relocation, arm64_linux:  "e22ddce0440326b3607550c219962e1d9d06f1f47d7b7137d9bc2b4324f70c07"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "b8b27d6f33c9e52b084c090eea2cc6edd53337e23657c135d382417d0e175e2e"
+  end
+
   on_macos do
     on_arm do
       url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.7/stbox_4.21.7_darwin_arm64.tar.gz"
