@@ -1,0 +1,143 @@
+# Builds bottles for a formula pushed to a branch named bottle/stbox-<version>.
+# It publishes them as a release of this repository and puts the formula with its bottle block on main.
+# The release workflow of subtitle-toolbox-go pushes that branch.
+name: bottle
+
+on:
+  push:
+    branches: ["bottle/**"]
+
+permissions:
+  contents: read
+
+env:
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+  HOMEBREW_NO_INSTALL_FROM_API: "1"
+  HOMEBREW_NO_ANALYTICS: "1"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macos-arm64
+            os: macos-14
+          - name: macos-intel
+            os: macos-15-intel
+          - name: linux-x86_64
+            os: ubuntu-24.04
+          - name: linux-arm64
+            os: ubuntu-24.04-arm
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Put Homebrew on the PATH
+        run: |
+          if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+            echo /home/linuxbrew/.linuxbrew/bin >> "$GITHUB_PATH"
+          fi
+      - name: Tap this checkout
+        run: |
+          mkdir -p "$(brew --repository)/Library/Taps/yama6a"
+          ln -s "$GITHUB_WORKSPACE" "$(brew --repository)/Library/Taps/yama6a/homebrew-tap"
+          brew trust yama6a/tap
+      - name: Build the bottle
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          version=${BRANCH#bottle/stbox-}
+          brew install --build-bottle yama6a/tap/stbox
+          brew bottle --json --no-rebuild \
+            --root-url "https://github.com/yama6a/homebrew-tap/releases/download/stbox-$version" \
+            yama6a/tap/stbox
+          ls -l ./*.bottle*
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bottle-${{ matrix.name }}
+          path: |
+            *.bottle.tar.gz
+            *.bottle.json
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true # a later step pushes with git
+      - name: Put Homebrew on the PATH
+        run: echo /home/linuxbrew/.linuxbrew/bin >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: bottle-*
+          merge-multiple: true
+          path: bottles
+      - name: Tap this checkout
+        run: |
+          mkdir -p "$(brew --repository)/Library/Taps/yama6a"
+          ln -s "$GITHUB_WORKSPACE" "$(brew --repository)/Library/Taps/yama6a/homebrew-tap"
+          brew trust yama6a/tap
+      - name: Add the bottle block to the formula
+        run: |
+          brew bottle --merge --write --no-commit bottles/*.json
+          cat Formula/stbox.rb
+          test "$(grep -c 'sha256 cellar' Formula/stbox.rb)" -eq 4
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          version=${BRANCH#bottle/stbox-}
+          # brew bottle writes stbox--<version>.<tag>.bottle.tar.gz. The root URL needs a single dash.
+          cd bottles
+          for f in *.bottle.tar.gz; do
+            mv "$f" "${f/--/-}"
+          done
+          gh release create "stbox-$version" ./*.bottle.tar.gz \
+            --title "stbox $version bottles" \
+            --notes "Homebrew bottles of stbox $version."
+      - name: Commit the formula to main and delete the branch
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          version=${BRANCH#bottle/stbox-}
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/stbox.rb
+          git commit -m "Update stbox to $version"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+          git push origin --delete "$BRANCH"
+
+  verify:
+    needs: publish
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15-intel, ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Put Homebrew on the PATH
+        run: |
+          if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+            echo /home/linuxbrew/.linuxbrew/bin >> "$GITHUB_PATH"
+          fi
+      - name: Install yama6a/tap/stbox as a user does
+        run: |
+          brew install yama6a/tap/stbox 2>&1 | tee install.log
+          grep -q 'Pouring stbox' install.log
+          if grep -q 'subtitle-toolbox-go/releases' install.log; then
+            echo "Homebrew built stbox from source." >&2
+            exit 1
+          fi
+          stbox --version
