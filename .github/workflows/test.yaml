@@ -29,6 +29,7 @@ jobs:
       - name: Tap this checkout
         run: |
           brew tap-new --no-git yama6a/local
+          brew trust yama6a/local
           cp Formula/*.rb "$(brew --repository yama6a/local)/Formula/"
       - name: Audit, install and test stbox
         env:
@@ -38,4 +39,18 @@ jobs:
           brew audit --strict --online yama6a/local/stbox
           brew install yama6a/local/stbox
           brew test yama6a/local/stbox
+          stbox --version
+
+  # Installs from the published tap, as a user does, to show what a user sees.
+  user-install:
+    needs: formula
+    if: github.event_name == 'push'
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Install yama6a/tap/stbox as a user does
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+        run: |
+          brew install yama6a/tap/stbox
           stbox --version
