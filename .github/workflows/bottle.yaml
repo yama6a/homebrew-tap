@@ -119,21 +119,30 @@ jobs:
           for f in *.bottle.tar.gz; do
             mv "$f" "${f/--/-}"
           done
-          gh release create "stbox-$version" ./*.bottle.tar.gz \
-            --title "stbox $version bottles" \
-            --notes "Homebrew bottles of stbox $version."
+          if gh release view "stbox-$version" >/dev/null 2>&1; then
+            gh release upload "stbox-$version" ./*.bottle.tar.gz --clobber
+          else
+            gh release create "stbox-$version" ./*.bottle.tar.gz \
+              --title "stbox $version bottles" \
+              --notes "Homebrew bottles of stbox $version."
+          fi
       - name: Commit the formula to main and delete the branch
         env:
           BRANCH: ${{ github.ref_name }}
         run: |
           version=${BRANCH#bottle/stbox-}
+          # The branch has no shared history with main when the checkout is shallow, so copy the file instead of rebasing.
+          cp Formula/stbox.rb "$RUNNER_TEMP/stbox.rb"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Formula/stbox.rb
-          git commit -m "Update stbox to $version"
           git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+          git switch -C main origin/main
+          cp "$RUNNER_TEMP/stbox.rb" Formula/stbox.rb
+          if ! git diff --quiet; then
+            git add Formula/stbox.rb
+            git commit -m "Update stbox to $version"
+            git push origin main
+          fi
           git push origin --delete "$BRANCH"
 
   verify:
