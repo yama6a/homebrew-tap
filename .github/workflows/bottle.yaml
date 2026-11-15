@@ -7,6 +7,10 @@ on:
   push:
     branches: ["bottle/**"]
 
+concurrency:
+  group: bottle
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -161,7 +165,11 @@ jobs:
           fi
       - name: Install yama6a/tap/stbox as a user does
         run: |
-          brew install yama6a/tap/stbox 2>&1 | tee install.log
+          set -o pipefail
+          status=0
+          brew install yama6a/tap/stbox > install.log 2>&1 || status=$?
+          cat install.log
+          test "$status" -eq 0
           grep -q 'Pouring stbox' install.log
           if grep -q 'subtitle-toolbox-go/releases' install.log; then
             echo "Homebrew built stbox from source." >&2
