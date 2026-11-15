@@ -67,7 +67,7 @@ jobs:
           OLDER_TAG: ${{ matrix.older_tag }}
         run: |
           for f in *."$TAG".bottle.*; do
-            mv "$f" "${f/".$TAG."/".$OLDER_TAG."}"
+            mv "$f" "${f/.$TAG./.$OLDER_TAG.}"
           done
           sed -i.bak "s/$TAG/$OLDER_TAG/g" ./*.bottle.json
           rm ./*.bak
