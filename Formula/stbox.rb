@@ -2,7 +2,6 @@
 class Stbox < Formula
   desc "Read, edit and write subtitle files"
   homepage "https://github.com/yama6a/subtitle-toolbox-go"
-  version "4.21.5"
   license "MIT"
 
   on_macos do
