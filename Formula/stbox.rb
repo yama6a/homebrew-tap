@@ -6,23 +6,23 @@ class Stbox < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.5/stbox_4.21.5_darwin_arm64.tar.gz"
-      sha256 "bedd2bc2ca9e4a078c06a0fd3c0222f9b53ef633ef447487ae89c5ebc3d68c60"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.7/stbox_4.21.7_darwin_arm64.tar.gz"
+      sha256 "bfe6b3b60ef145624a64c75dcb8910de97e2cbc71ac575403bd39e1cc0e05823"
     end
     on_intel do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.5/stbox_4.21.5_darwin_amd64.tar.gz"
-      sha256 "8d9b4c59625ac0d06bc859ea03d8a825466a7e86f318dbfbb5b231b97d2a00e6"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.7/stbox_4.21.7_darwin_amd64.tar.gz"
+      sha256 "2b2ac5e29405726c21b29c7adb4091605df5567fc0022781e66bb8039437e5d8"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.5/stbox_4.21.5_linux_arm64.tar.gz"
-      sha256 "370c05f28859c1f527c65618a99536503cee6657e7f2d1ec57e02f8d6e159d27"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.7/stbox_4.21.7_linux_arm64.tar.gz"
+      sha256 "f91cfc592adcbc42025b87618e0a58fe6b9b06b89ec84c0294e5bb43f60942c4"
     end
     on_intel do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.5/stbox_4.21.5_linux_amd64.tar.gz"
-      sha256 "3f1957859e516d69487945eddb45615636a80ae1fa67555cf20bc77841acc8fd"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.21.7/stbox_4.21.7_linux_amd64.tar.gz"
+      sha256 "25a4460294dd215cbdd0226474296652da7d34d6b26fe66cebe54effc49bf33f"
     end
   end
 
