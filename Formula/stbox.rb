@@ -5,32 +5,32 @@ class Stbox < Formula
   license "MIT"
 
   bottle do
-    root_url "https://github.com/yama6a/homebrew-tap/releases/download/stbox-4.22.3"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma: "467746d4e2e66902839302ea86721f2dd7eda87036b2c8975a5e5d6ccadd5e6e"
-    sha256 cellar: :any_skip_relocation, ventura:      "fd44084618b4b1cc0bcffdbdb7c2cee7473dd4e86bc22d23f2b7cb9bb3108aa8"
-    sha256 cellar: :any_skip_relocation, arm64_linux:  "f3af0e12a6f1c1cc6f160f758693bfeacef5896259c35305880ca2086f55ed0c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "71ade49e5badd422d607d43182753286c21f2f180996b692f728ec52adb3bc8f"
+    root_url "https://github.com/yama6a/homebrew-tap/releases/download/stbox-4.22.4"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma: "a02d5fafad94df39f8e34064559c79de0f6a94722848a49c3f89fd4f780819bb"
+    sha256 cellar: :any_skip_relocation, ventura:      "e808dda4f186c96e9216df178cf8014697e07931a2ed7a9ae7ba19416507d83a"
+    sha256 cellar: :any_skip_relocation, arm64_linux:  "a6b3775defc23571132c4efdb1f674afb7cd37f40a4c3e963683171e3063a020"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "5d350f5ce695f4039ab1a9dfca8f5f3fcd804cb84a33706d9532fe87e393ad3e"
   end
 
   on_macos do
     on_arm do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.3/stbox_4.22.3_darwin_arm64.tar.gz"
-      sha256 "2c9b93df804d298d156ae6ace6bfb0911b6e39e7d9c6f15aca78c5fd992854ba"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.4/stbox_4.22.4_darwin_arm64.tar.gz"
+      sha256 "20d934d3af08b5d91aeaf7064468b2afab27a35aa0a91a6dc095022cde9f698d"
     end
     on_intel do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.3/stbox_4.22.3_darwin_amd64.tar.gz"
-      sha256 "84e534939da10a461f9736dc104c126a6584c969ebbb175b3c14b961c7a9372e"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.4/stbox_4.22.4_darwin_amd64.tar.gz"
+      sha256 "4660d9b664258455e96d4c4f3641b8b516e95563398aadaa9b2292fce2631f0e"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.3/stbox_4.22.3_linux_arm64.tar.gz"
-      sha256 "3b4ff2666d7b82143e7788b42cd4ccdc608d4296dcd965777ceeccb581ee9ee0"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.4/stbox_4.22.4_linux_arm64.tar.gz"
+      sha256 "4dbe8d1f805df5ef6d44fb83694186f55c232817f93394b91ac777c0e38c35de"
     end
     on_intel do
-      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.3/stbox_4.22.3_linux_amd64.tar.gz"
-      sha256 "be1936156c3e5687190ea0adf465c855838a988b9077aa8462927ec2527f94d4"
+      url "https://github.com/yama6a/subtitle-toolbox-go/releases/download/v4.22.4/stbox_4.22.4_linux_amd64.tar.gz"
+      sha256 "c701ae4d26f9b33dab529cd2e5f37e4bda66e377221751cdaa71e457d6cd4fd6"
     end
   end
 
