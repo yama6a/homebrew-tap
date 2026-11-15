@@ -136,7 +136,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
-          git switch -C main origin/main
+          git switch --force -C main origin/main
           cp "$RUNNER_TEMP/stbox.rb" Formula/stbox.rb
           if ! git diff --quiet; then
             git add Formula/stbox.rb
