@@ -1,9 +1,7 @@
-# Installs and tests every formula on each push and pull request.
+# Installs and tests every formula on each pull request.
 name: test
 
 on:
-  push:
-    branches: [main]
   pull_request:
 
 permissions:
